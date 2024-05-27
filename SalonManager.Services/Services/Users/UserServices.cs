@@ -8,7 +8,7 @@ namespace SalonManager.Services.Services.Users
     {
         Task<UserResponse> CreateUser(UserRequest request);
         Task<IEnumerable<UserResponse>> GetAll();
-        Task<UserResponse> GetById(int id);
+        Task<UserResponse> GetById(int? id);
         Task<UserResponse> UpdateUser(int id, UserRequest request);
         Task<bool> Delete(int id);
     }
@@ -63,7 +63,7 @@ namespace SalonManager.Services.Services.Users
             }
         }
 
-        public async Task<UserResponse> GetById(int id)
+        public async Task<UserResponse> GetById(int? id)
         {
             try
             {

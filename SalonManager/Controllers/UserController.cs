@@ -1,101 +1,134 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SalonManager.Domain.Entities;
 using SalonManager.Domain.Interfaces;
 using SalonManager.Services.Services.Users;
+using SalonManager.Web.ViewModels;
 
 namespace SalonManager.Web.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class UserController : ControllerBase
+    public class UserController : Controller
     {
         private readonly IUserServices _userServices;
+
         public UserController(IUserServices userServices)
         {
             _userServices = userServices;
         }
 
+        public async Task<IActionResult> Index()
+        {
+            var users = await _userServices.GetAll();
+            var userViewModels = users.Select(u => new UserViewModel
+            {
+                Id = u.Id,
+                Username = u.Username,
+                Email = u.Email
+            }).ToList();
+            return View(userViewModels);
+        }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
         [HttpPost]
-        public async Task<ActionResult<UserResponse>> Create([FromBody] UserRequest request)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(UserViewModel model)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return BadRequest(ModelState); // Retorna detalhes dos erros de validação
+                var user = new UserRequest
+                {
+                    Username = model.Username,
+                    Email = model.Email,
+                    PasswordHash = model.PasswordHash // Você deve hashear a senha aqui
+                };
+                await _userServices.CreateUser(user);
+                return RedirectToAction(nameof(Index));
             }
-
-            try
-            {
-                var data = await _userServices.CreateUser(request);
-
-                return Ok(data);
-            }
-            catch (Exception ex)
-            {
-
-                throw new Exception(ex.Message);
-            }
-        }
-        [HttpPut("{id}")]
-        public async Task<ActionResult<UserResponse>> Update(int id, [FromBody] UserRequest request)
-        {
-            try
-            {
-                var data = await _userServices.UpdateUser(id, request);
-
-                return Ok(data);
-            }
-            catch (Exception ex)
-            {
-
-                throw new Exception(ex.Message);
-            }
-        }
-        [HttpGet]
-        public async Task<ActionResult<UserResponse>> GetAll()
-        {
-            try
-            {
-                var data = await _userServices.GetAll();
-
-                return Ok(data);
-            }
-            catch (Exception ex)
-            {
-
-                throw new Exception(ex.Message);
-            }
+            return View(model);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<UserResponse>> GetById(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            try
+            var user = await _userServices.GetById(id);
+            if (user == null)
             {
-                var data = await _userServices.GetById(id);
-
-                return Ok(data);
+                return NotFound();
             }
-            catch (Exception ex)
+            var model = new UserViewModel
             {
-
-                throw new Exception(ex.Message);
-            }
+                Id = user.Id,
+                Username = user.Username,
+                Email = user.Email,
+                PasswordHash = user.PasswordHash
+                
+            };
+            return View(model);
         }
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Remover(int id)
-        {
-            try
-            {
-                var removido = await _userServices.Delete(id);
 
-                if (removido)
-                    return Ok();
-                else
-                    return NotFound();
-            }
-            catch (Exception ex)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, UserViewModel model)
+        {
+            if (id != model.Id)
             {
-                throw new Exception(ex.Message);
+                return BadRequest();
             }
+
+            if (ModelState.IsValid)
+            {
+                var user = new UserRequest
+                {                    
+                    Username = model.Username,
+                    Email = model.Email,
+                    PasswordHash = model.PasswordHash // Atualize conforme necessário
+                };
+                await _userServices.UpdateUser(id, user);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(model);
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var user = await _userServices.GetById(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var model = new UserViewModel
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Email = user.Email
+            };
+            return View(model);
+        }
+
+        public async Task<IActionResult> Delete(int? id)
+        {
+            var user = await _userServices.GetById(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var model = new UserViewModel
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Email = user.Email
+            };
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteCofirmed(int id)
+        {
+            await _userServices.Delete(id);
+            return RedirectToAction("Index");
         }
     }
 }

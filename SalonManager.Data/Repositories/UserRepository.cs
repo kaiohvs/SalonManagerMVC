@@ -17,7 +17,7 @@ namespace SalonManager.Data.Repositories
             return await _appDbContext.Users.ToListAsync();
         }
 
-        public async Task<User?> FindById(int id)
+        public async Task<User?> FindById(int? id)
         {
             return await _appDbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
         }

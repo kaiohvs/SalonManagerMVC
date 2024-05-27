@@ -1,0 +1,42 @@
+﻿@model IEnumerable<SalonManager.Web.ViewModels.UserViewModel>
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Lista de usuarios";
+}
+
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<div class="container">
+    <h1 class="mt-5 mb-4 text-center">Lista de Usuários</h1>    
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <table class="table table-hover">
+                <thead class="table-primary">
+                    <tr>
+                        <th scope="col">Username</th>
+                        <th scope="col">Email</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr class="table-secondary">
+                            <td>@user.Username</td>
+                            <td>@user.Email</td>
+                            <td>
+                                <a href="@Url.Action("Edit", "User", new { id = user.Id })" class="btn btn-warning">Editar</a>
+                                <a href="@Url.Action("Details", "User", new { id = user.Id })" class="btn btn-info">Detalhes</a>
+                                <a href="@Url.Action("Delete", "User", new { id = user.Id })" class="btn btn-danger">Deletar</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <p class="text-center">
+                <a asp-action="Create" class="btn btn-lg btn-primary">Criar Novo Usuario</a>
+            </p>
+        </div>
+    </div>
+</div>

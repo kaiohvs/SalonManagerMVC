@@ -1,0 +1,31 @@
+﻿@model SalonManager.Web.ViewModels.UserViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Excluir Usuário";
+}
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+<div class="container">
+    <h1 class="mt-5 mb-4 text-center">Excluir Usuário</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Tem certeza que deseja excluir este usuário?</h4>
+                <p>Esta ação não pode ser desfeita.</p>
+                <hr>
+                <dl class="row">
+                    <dt class="col-sm-6">Username</dt>
+                    <dd class="col-sm-9">@Model.Username</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <form method="post" asp-action="Delete">
+        <div class="form-group text-center">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger">Excluir</button>
+            <a href="@Url.Action("Index")" class="btn btn-secondary ml-2">Cancelar</a>
+        </div>
+    </form>
+</div>
