@@ -32,8 +32,7 @@ namespace SalonManager.Web.Controllers
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost]        
         public async Task<IActionResult> Create(UserViewModel model)
         {
             if (ModelState.IsValid)
@@ -68,8 +67,7 @@ namespace SalonManager.Web.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost]        
         public async Task<IActionResult> Edit(int id, UserViewModel model)
         {
             if (id != model.Id)
@@ -123,12 +121,20 @@ namespace SalonManager.Web.Controllers
             return View(model);
         }
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteCofirmed(int id)
+        [HttpPost, ActionName("Delete")]        
+        public async Task<IActionResult> DeleteCofirmed(UserViewModel model)
         {
-            await _userServices.Delete(id);
-            return RedirectToAction("Index");
+            try
+            {
+                await _userServices.Delete(model.Id);
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+          
         }
     }
 }

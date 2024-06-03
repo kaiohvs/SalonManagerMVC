@@ -1,39 +1,40 @@
-﻿@page
-@model SalonManager.Web.ViewModels.UserViewModel
+﻿@model SalonManager.Web.ViewModels.UserViewModel
 @{
-    ViewData["Title"] = "Criar Usuario";
+    Layout = "_Layout";
+    ViewData["Title"] = "Criar Usuário";
 }
-<h1>Criar Usuarios</h1>
 
-<h4>Usuarios</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div class="form-group">
-                <label asp-for="Username" class="control-label"></label>
-                <input asp-for="Username" class="form-control" />
-                <span asp-validation-formaction="Username" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+<div class="container">
+    <h1 class="mt-5 mb-4 text-center">Criar Usuários</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <form asp-action="Create" method="post">
+                <div class="form-floating mb-3 mt-3">
+                    <input asp-for="Username" type="text" class="form-control" placeholder="Username" name="Username"/>
+                    <label for="Username" class="form-label">Usuario</label>
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3 mt-3">
+                    <input asp-for="Email" type="text" class="form-control" placeholder="Email" name="Email"/>
+                    <label for="Email" class="form-label">Email</label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3 mt-3">
+                    <input asp-for="PasswordHash" type="password" class="form-control" placeholder="PasswordHash" name="PasswordHash" />
+                    <label for="PasswordHash" class="form-label">Senha</label>
+                    <span asp-validation-for="PasswordHash" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Criar" class="btn btn-primary" />
+                    <a href="@Url.Action("Index")" class="btn btn-secondary ml-2">Cancelar</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-<div>
-    <a asp-action="Index">Voltar a lista</a>
-</div>
+
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
