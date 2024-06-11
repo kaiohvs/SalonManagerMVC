@@ -1,0 +1,50 @@
+﻿@model SalonManager.Web.ViewModels.LoginViewModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Login";
+}
+
+
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+<div class="container">
+    <h1 class="mt-5 mb-4 text-center">Login</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+
+            @if (ViewData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @ViewData["ErrorMessage"]
+                </div>
+            }
+            @if (ViewData["MensagemSucesso"] != null)
+            {
+                <div class="alert alert-dismissible" role="alert">
+                    @ViewData["MensagemSucesso"]
+                </div>
+            }
+            <form asp-controller="Account" asp-action="Login" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="mb-3 mt-3">
+                    <input type="text" asp-for="Username" class="form-control" placeholder="Usuario" name="Username" />
+                    @Html.ValidationMessageFor(model => model.Username)
+                </div>
+
+                <div class="mb-3 mt-3">
+                    <input type="password" asp-for="Password" class="form-control" placeholder="Senha" name="Password" />
+                    @Html.ValidationMessageFor(model => model.Password)
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-lg btn-primary">Login</button>
+                    <a href="@Url.Action("Registrar", "Account")" class="btn btn-lg btn-secondary">Registrar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+

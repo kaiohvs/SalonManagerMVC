@@ -32,6 +32,8 @@ namespace SalonManager.Services.Services.Users
                 if (createUser == null)
                     return null;
 
+                createUser.DateCreated = DateTime.UtcNow;
+                createUser.DateUpdated = DateTime.UtcNow;
                 await _repository.Save(createUser);
                 return _mapper.Map<UserResponse>(createUser);
 
@@ -90,6 +92,8 @@ namespace SalonManager.Services.Services.Users
                 {
                     // Mapeia as novas propriedades para a entidade existente
                     _mapper.Map(request, byId);
+
+                    byId.DateUpdated = DateTime.Now;
 
                     await _repository.Save(byId);
 

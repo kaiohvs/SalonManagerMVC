@@ -10,33 +10,35 @@
     <h1 class="mt-5 mb-4 text-center">Criar Usuários</h1>
     <div class="row justify-content-center">
         <div class="col-md-4">
+
             <form asp-action="Create" method="post">
-                <div class="form-floating mb-3 mt-3">
-                    <input asp-for="Username" type="text" class="form-control" placeholder="Username" name="Username"/>
-                    <label for="Username" class="form-label">Usuario</label>
-                    <span asp-validation-for="Username" class="text-danger"></span>
+                <div class="mb-3 mt-3">
+                    <input type="text" asp-for="Username" class="form-control" placeholder="Username" name="Username" />
+                    @Html.ValidationMessageFor(model => model.Username)
                 </div>
-                <div class="form-floating mb-3 mt-3">
-                    <input asp-for="Email" type="text" class="form-control" placeholder="Email" name="Email"/>
-                    <label for="Email" class="form-label">Email</label>
-                    <span asp-validation-for="Email" class="text-danger"></span>
+                <div class="mb-3 mt-3">
+                    <input type="text" asp-for="Email" class="form-control" placeholder="Email" name="Email" />
+                    @Html.ValidationMessageFor(model => model.Email)
                 </div>
-                <div class="form-floating mb-3 mt-3">
-                    <input asp-for="PasswordHash" type="password" class="form-control" placeholder="PasswordHash" name="PasswordHash" />
-                    <label for="PasswordHash" class="form-label">Senha</label>
-                    <span asp-validation-for="PasswordHash" class="text-danger"></span>
+                <div class="mb-3 mt-3">
+                    <input type="password" asp-for="PasswordHash" class="form-control" placeholder="Senha" name="PasswordHash" />
+                    @Html.ValidationMessageFor(model => model.PasswordHash)
+                </div>
+                <div class="mb-3 mt-3">
+                    <select asp-for="IsAdmin" class="form-select" name="IsAdmin">
+                        <option value="true">Administrador</option>
+                        <option value="false">Membro</option>
+                    </select>
+                    @Html.ValidationMessageFor(model => model.IsAdmin)
                 </div>
                 <div class="form-group">
-                    <input type="submit" value="Criar" class="btn btn-primary" />
+                    <button type="submit" class="btn btn-primary">Enviar</button>
                     <a href="@Url.Action("Index")" class="btn btn-secondary ml-2">Cancelar</a>
                 </div>
             </form>
+
+
         </div>
     </div>
 </div>
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}

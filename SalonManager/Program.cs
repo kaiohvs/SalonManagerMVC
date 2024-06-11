@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SalonManager.Data.Context;
@@ -11,6 +12,23 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+       .AddCookie(options =>
+       {
+           options.LoginPath = "/Account/Login"; // Defina a página de login
+           options.AccessDeniedPath = "/Account/AccessDenied";
+
+       });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminPolicy", policy =>
+    {
+        policy.RequireAuthenticatedUser(); // Requer que o usuário esteja autenticado
+        policy.RequireRole("Admin"); // Requer que o usuário tenha a função 'Admin'
+    });
+});
 
 //Confifuração de AutoMapper
 var mapperConfig = new MapperConfiguration(mc =>
@@ -31,8 +49,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         .AddJsonFile("appsettings.json")
         .Build();
 
-    string connectionString = configuration.GetConnectionString("DefaultConnection");
-    options.UseSqlServer(connectionString);
+
+    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
 });
 
 // Registrar repositórios e serviços
@@ -56,11 +74,15 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// Adicionar os middlewares de autenticação e autorização
+app.UseAuthentication();
 app.UseAuthorization();
 
+
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=User}/{action=Index}/{id?}");
+    name: "Login",
+    pattern: "{controller=Account}/{action=Login}/{id?}");
+
 
 
 
